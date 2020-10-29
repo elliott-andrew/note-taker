@@ -33,10 +33,9 @@ app.get("/api/notes", function (req, res) {
 // =============================================================
 // Note Taking
 // Post function
-app.post("/notes", function (req, res) {
+app.post("/api/notes", function (req, res) {
   // Array to hold the submitted note
   let newNote = req.body;
-  console.log(newNote);
   // Add the newly submitted note to the notes array
   notesAll.push(newNote);
   // Assign the new note an index number
