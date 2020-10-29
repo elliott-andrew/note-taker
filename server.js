@@ -1,9 +1,12 @@
-var express = require('express');
-var indexRouter = require('./routes/index');
-var notesRouter = require('./routes/notes');
-var path = require('path');
-var app = express();
-var PORT = process.env.PORT || 3000;
+const express = require('express');
+const app = express();
+
+const indexRouter = require('./routes/index');
+const notesRouter = require('./routes/notes');
+
+const path = require('path');
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, function () {
   console.log('Listening on PORT: ' + PORT);
@@ -11,7 +14,7 @@ app.listen(PORT, function () {
 
 // view engine setup
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
