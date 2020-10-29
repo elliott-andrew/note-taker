@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 
-app.use('/', indexRouter);
+app.use('', indexRouter);
 app.use('/notes', notesRouter);
 
 // catch 404 and forward to error handler
