@@ -45,5 +45,20 @@ app.post("/api/notes", function (req, res) {
   fs.appendFileSync("./db/db.json", JSON.stringify(newNote));
   res.json(newNote);
 });
+// Delete function
+app.delete("api/notes/:id", function (req, res) {
+  // Pull the id number of the note to be deleted
+  let index = parseInt(req.params.id);
+  // Find the id number in the notes array
+  function removedNote() {
+    if (index > -1) {
+      // Remove the id nnumber in the notes array
+      notesAll.splice(index, 1);
+    }
+    return notesAll;
+  }
+  // Update the notes array
+  fs.writeFileSync("./db/db.json", JSON.stringify(removedNote));
+});
 
 module.exports = app;
