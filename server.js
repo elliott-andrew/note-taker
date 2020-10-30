@@ -30,38 +30,20 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.get("/api/notes", function (req, res) {
   return res.json(JSON.parse(fs.readFileSync("./db/db.json")));
 });
-
 // =============================================================
 // Note Taking
 // Post function
 app.post("/api/notes", function (req, res) {
   // Array to hold the submitted note
   let newNote = req.body;
-  // console log the note to verify
   console.log(newNote);
   // Add the newly submitted note to the notes array
   notesAll.push(newNote);
   // Assign the new note an index number
   newNote.id = notesAll.indexOf(newNote);
   // Update the database with the new note
-  fs.writeFileSync("./db/db.json", JSON.stringify(newNote));
+  fs.appendFileSync("./db/db.json", JSON.stringify(newNote));
   res.json(newNote);
 });
-// Delete function
-app.delete("api/notes/:id", function (req, res) {
-  // Pull the id number of the note to be deleted
-  let index = parseInt(req.params.id);
-  // Find the id number in the notes array
-  function removedNote() {
-    if (index > -1) {
-      // Remove the id nnumber in the notes array
-      notesAll.splice(index, 1);
-    }
-    return notesAll;
-  }
-  // Update the notes array
-  fs.writeFileSync("./db/db.json", JSON.stringify(removedNote));
-});
-
 
 module.exports = app;
