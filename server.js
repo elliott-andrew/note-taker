@@ -5,7 +5,6 @@ const fs = require('fs');
 const path = require('path');
 const indexRouter = require('./routes/index');
 const notesRouter = require('./routes/notes');
-const db = require('./db/db')
 
 // Express
 const app = express();
@@ -22,7 +21,7 @@ app.use('', indexRouter);
 app.use('/notes', notesRouter);
 app.use(express.static(path.join(__dirname, '/public')));
 app.get("/api/notes", function (req, res) {
-  return res.json(JSON.parse(fs.readFileSync(db)));
+  return res.json(JSON.parse(fs.readFileSync('./db/db.json')));
 });
 // =============================================================
 // Note Taking
