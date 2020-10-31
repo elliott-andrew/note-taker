@@ -40,22 +40,22 @@ app.get("/api/notes", function (req, res) {
   });
 });
 // Post function
-// app.post("/api/notes", function (req, res) {
-//   readFile(notesArray, "utf8").then(data => {
-//     let notes = JSON.parse(data);
-//     const newNote = { ...req.body };
-//     notes.push(newNote);
-//     writeFile(noteArray, JSON.stringify(notes)).then(() => {
-//       res.json(newNote);
-//     })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// });
+app.post("/api/notes", function (req, res) {
+  readFile(notesArray, "utf8").then(data => {
+    let notes = JSON.parse(data);
+    const newNote = { ...req.body };
+    notes.push(newNote);
+    writeFile(noteArray, JSON.stringify(notes)).then(() => {
+      res.json(newNote);
+    })
+      .catch((err) => {
+        console.log(err);
+      });
+  })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 // // Delete function
 // app.delete("api/notes/:id", function (req, res) {
 //   // Pull the id number of the note to be deleted
