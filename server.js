@@ -3,8 +3,6 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const indexRouter = require('./routes/index');
-const notesRouter = require('./routes/notes');
 const util = require("util");
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
@@ -21,9 +19,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('', indexRouter);
-app.use('/notes', notesRouter);
 app.use(express.static(path.join(__dirname, '/public')));
+app.get("/", function (res, req,) {
+  res.sendFile(path.join(__dirname, "public/notes.html"));
+})
+app.use('/notes', notesRouter);
 app.get("/api/notes", function (req, res) {
   return res.json(JSON.parse(fs.readFileSync('./db/db.json')));
 });
