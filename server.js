@@ -34,7 +34,10 @@ app.get("/api/notes", function (req, res) {
 // Note Taking
 // Post function
 app.post("/api/notes", function (req, res) {
+  console.log("im running")
   fs.readFile(notesAll, "utf8").then(data => {
+    console.log(data)
+    console.log("me too")
     // Array to hold the submitted note
     let savedNotes = JSON.parse(data);
     console.log(savedNotes);
