@@ -1,5 +1,5 @@
-// =============================================================
 // Dependencies
+// ================================================================================
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -11,41 +11,45 @@ const notesArray = path.join(__dirname, 'db/db.json');
 // Express
 const app = express();
 
-// dynamic port
+// Dynamic port
 const PORT = process.env.PORT || 3000;
 
 // Engine setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '/public')));
 
 // Routes
-app.use(express.static(path.join(__dirname, '/public')));
-app.get("/", function (res, req,) {
+// ================================================================================
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
+app.get("/notes", function (req, res) {
   res.sendFile(path.join(__dirname, "public/notes.html"));
-})
-app.use('/notes', notesRouter);
-app.get("/api/notes", function (req, res) {
-  return res.json(JSON.parse(fs.readFileSync('./db/db.json')));
 });
-// =============================================================
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
+
 // Note Taking
+// ================================================================================
 // Post function
-app.post("/api/notes", function (req, res) {
-  readFile(notesArray, "utf8").then(data => {
-    let notes = JSON.parse(data);
-    const newNote = { ...req.body };
-    notes.push(newNote);
-    writeFile(noteArray, JSON.stringify(notes)).then(() => {
-      res.json(newNote);
-    })
-      .catch((err) => {
-        console.log(err);
-      });
-  })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+// app.post("/api/notes", function (req, res) {
+//   readFile(notesArray, "utf8").then(data => {
+//     let notes = JSON.parse(data);
+//     const newNote = { ...req.body };
+//     notes.push(newNote);
+//     writeFile(noteArray, JSON.stringify(notes)).then(() => {
+//       res.json(newNote);
+//     })
+//       .catch((err) => {
+//         console.log(err);
+//       });
+//   })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
 // // Delete function
 // app.delete("api/notes/:id", function (req, res) {
 //   // Pull the id number of the note to be deleted
@@ -62,8 +66,11 @@ app.post("/api/notes", function (req, res) {
 //   fs.writeFileSync("./db/db.json", JSON.stringify(removedNote));
 // });
 
+// Listener
+// ================================================================================
 app.listen(PORT, function () {
   console.log('Listening on PORT: ' + PORT);
 });
 
+// Export
 module.exports = app;
