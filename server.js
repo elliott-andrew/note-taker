@@ -26,7 +26,7 @@ app.get("/api/notes", function (req, res) {
 // =============================================================
 // Note Taking
 // Post function
-app.post('/notes', function (req, res) {
+app.post('/api/notes', function (req, res) {
   var fileData = req.body;
   fs.writeFile('./db/db.json', fileData, function (err) {
     if (err) {
