@@ -33,7 +33,7 @@ app.get("/api/notes", function (req, res) {
 app.post("/api/notes", function (req, res) {
   readFile(notesArray, "utf8").then(data => {
     let notes = JSON.parse(data);
-    const newNote = { ...req.body, "id": generateNewId(notes) };
+    const newNote = { ...req.body };
     notes.push(newNote);
     writeFile(noteArray, JSON.stringify(notes)).then(() => {
       res.json(newNote);
