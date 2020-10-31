@@ -5,6 +5,10 @@ const fs = require('fs');
 const path = require('path');
 const indexRouter = require('./routes/index');
 const notesRouter = require('./routes/notes');
+const util = require("util");
+const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
+const notesArray = path.join(__dirname, 'db/db.json');
 
 // Express
 const app = express();
@@ -26,21 +30,21 @@ app.get("/api/notes", function (req, res) {
 // =============================================================
 // Note Taking
 // Post function
-app.post('/api/notes', function (req, res) {
-  var fileData = req.body;
-  fs.writeFile('./db/db.json', fileData, function (err) {
-    if (err) {
-      res.status(500).jsonp({ error: 'Failed to write file' });
-    }
-    res.send("File write success");
-  });
-});
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.post("/api/notes", function (req, res) {
+  readFile(notesArray, "utf8").then(data => {
+    let notes = JSON.parse(data);
+    const newNote = { ...req.body, "id": generateNewId(notes) };
+    notes.push(newNote);
+    writeFile(noteArray, JSON.stringify(notes)).then(() => {
+      res.json(newNote);
+    })
+      .catch((err) => {
+        console.log(err);
+      });
+  })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 // // Delete function
 // app.delete("api/notes/:id", function (req, res) {
