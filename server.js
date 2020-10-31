@@ -19,18 +19,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
 
-// Routes
-// ================================================================================
-app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "public/index.html"));
-});
-app.get("/notes", function (req, res) {
-  res.sendFile(path.join(__dirname, "public/notes.html"));
-});
-app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "public/index.html"));
-});
-
 // Note Taking
 // ================================================================================
 // Get function
@@ -59,20 +47,34 @@ app.post("/api/notes", function (req, res) {
 });
 
 // Delete function
-const deletedNote = parseInt(req.params.id);
-readFile(noteArray, "utf8").then(data => {
-  let notes = JSON.parse(data);
-  notes = notes.filter(newNote => newNote.id !== deletedNote);
-  writeFile(noteArray, JSON.stringify(notes)).then(() => {
-    res.send('Got a DELETE request at /user');
+app.delete("/api/notes/:id", function (req, res) {
+  const deletedNote = parseInt(req.params.id);
+  readFile(noteArray, "utf8").then(data => {
+    let notes = JSON.parse(data);
+    notes = notes.filter(newNote => newNote.id !== deletedNote);
+    writeFile(noteArray, JSON.stringify(notes)).then(() => {
+      res.send('Got a DELETE request at /user');
+    })
+      .catch((err) => {
+        console.log(err);
+      });
   })
     .catch((err) => {
       console.log(err);
     });
-})
-  .catch((err) => {
-    console.log(err);
-  });
+});
+
+// Routes
+// ================================================================================
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
+app.get("/notes", function (req, res) {
+  res.sendFile(path.join(__dirname, "public/notes.html"));
+});
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
 
 // Listener
 // ================================================================================
