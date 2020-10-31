@@ -33,6 +33,12 @@ app.get("*", function (req, res) {
 
 // Note Taking
 // ================================================================================
+// Get function
+app.get("/api/notes", function (req, res) {
+  readFile(notesArray, "utf8").then(data => res.json(JSON.parse(data))).catch((err) => {
+    console.log(err);
+  });
+});
 // Post function
 // app.post("/api/notes", function (req, res) {
 //   readFile(notesArray, "utf8").then(data => {
