@@ -35,30 +35,33 @@ app.get("/api/notes", function (req, res) {
 // Post function
 app.post("/api/notes", function (req, res) {
   // Array to hold the submitted note
-  let newNote = req.body;
+  let newNote = JSON.parse(req.body);
   console.log(newNote);
   // Add the newly submitted note to the notes array
   notesAll.push(newNote);
   // Assign the new note an index number
   newNote.id = notesAll.indexOf(newNote);
   // Update the database with the new note
-  fs.appendFileSync("./db/db.json", JSON.stringify(newNote));
-  res.json(newNote);
+  fs.writeFileSync(notesAll, JSON.stringify(newNote)).then(() => {
+    res.json(newNote);
+  }).catch((err) => {
+    console.log(err);
+  })
 });
-// Delete function
-app.delete("api/notes/:id", function (req, res) {
-  // Pull the id number of the note to be deleted
-  let index = parseInt(req.params.id);
-  // Find the id number in the notes array
-  function removedNote() {
-    if (index > -1) {
-      // Remove the id nnumber in the notes array
-      notesAll.splice(index, 1);
-    }
-    return notesAll;
-  }
-  // Update the notes array
-  fs.writeFileSync("./db/db.json", JSON.stringify(removedNote));
-});
+// // Delete function
+// app.delete("api/notes/:id", function (req, res) {
+//   // Pull the id number of the note to be deleted
+//   let index = parseInt(req.params.id);
+//   // Find the id number in the notes array
+//   function removedNote() {
+//     if (index > -1) {
+//       // Remove the id nnumber in the notes array
+//       notesAll.splice(index, 1);
+//     }
+//     return notesAll;
+//   }
+//   // Update the notes array
+//   fs.writeFileSync("./db/db.json", JSON.stringify(removedNote));
+// });
 
 module.exports = app;
