@@ -26,29 +26,22 @@ app.get("/api/notes", function (req, res) {
 // =============================================================
 // Note Taking
 // Post function
-// app.post("/api/notes", function (req, res) {
+app.post('/notes', function (req, res) {
+  var fileData = req.body;
+  fs.writeFile('./db/db.json', fileData, function (err) {
+    if (err) {
+      res.status(500).jsonp({ error: 'Failed to write file' });
+    }
+    res.send("File write success");
+  });
+});
 
-//   fs.appendFile("./db/db.json", "utf8")
-// console.log("im running")
-// fs.readFile(notesAll, "utf8").then(data => {
-//   console.log(data)
-//   console.log("me too")
-//   // Array to hold the submitted note
-//   let savedNotes = JSON.parse(data);
-//   console.log(savedNotes);
-//   // Add the newly submitted note to the notes array
-//   let newNote = { ...req.body }
-//   savedNotes.push(newNote)
-//   // Assign the new note an index number
-//   newNote.id = notesAll.indexOf(newNote);
-//   // Update the database with the new note
-//   fs.writeFile(notesAll, JSON.stringify(savedNotes)).then(() => {
-//     res.json(newNote);
-//   }).catch((err) => {
-//     console.log(err);
-//   });
-// });
-// });
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 // // Delete function
 // app.delete("api/notes/:id", function (req, res) {
 //   // Pull the id number of the note to be deleted
