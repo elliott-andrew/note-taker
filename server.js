@@ -10,7 +10,7 @@ const notesRouter = require('./routes/notes');
 const app = express();
 
 // Array to hold notes
-const notesAll = require('./db/db.json')
+const notesAll = path.join(__dirname, './db/db.json');
 
 // dynamic port
 const PORT = process.env.PORT || 3000;
@@ -34,19 +34,22 @@ app.get("/api/notes", function (req, res) {
 // Note Taking
 // Post function
 app.post("/api/notes", function (req, res) {
-  // Array to hold the submitted note
-  let newNote = JSON.parse(req.body);
-  console.log(newNote);
-  // Add the newly submitted note to the notes array
-  notesAll.push(newNote);
-  // Assign the new note an index number
-  newNote.id = notesAll.indexOf(newNote);
-  // Update the database with the new note
-  fs.writeFileSync(notesAll, JSON.stringify(newNote)).then(() => {
-    res.json(newNote);
-  }).catch((err) => {
-    console.log(err);
-  })
+  fs.readFile(notesAll, "utf8").then(data => {
+    // Array to hold the submitted note
+    let savedNotes = JSON.parse(data);
+    console.log(savedNotes);
+    // Add the newly submitted note to the notes array
+    let newNote = { ...req.body }
+    savedNotes.push(newNote)
+    // Assign the new note an index number
+    newNote.id = notesAll.indexOf(newNote);
+    // Update the database with the new note
+    fs.writeFile(notesAll, JSON.stringify(savedNotes)).then(() => {
+      res.json(newNote);
+    }).catch((err) => {
+      console.log(err);
+    });
+  });
 });
 // // Delete function
 // app.delete("api/notes/:id", function (req, res) {
