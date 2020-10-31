@@ -39,6 +39,7 @@ app.get("/api/notes", function (req, res) {
     console.log(err);
   });
 });
+
 // Post function
 app.post("/api/notes", function (req, res) {
   readFile(notesArray, "utf8").then(data => {
@@ -56,21 +57,22 @@ app.post("/api/notes", function (req, res) {
       console.log(err);
     });
 });
-// // Delete function
-// app.delete("api/notes/:id", function (req, res) {
-//   // Pull the id number of the note to be deleted
-//   let index = parseInt(req.params.id);
-//   // Find the id number in the notes array
-//   function removedNote() {
-//     if (index > -1) {
-//       // Remove the id nnumber in the notes array
-//       notesAll.splice(index, 1);
-//     }
-//     return notesAll;
-//   }
-//   // Update the notes array
-//   fs.writeFileSync("./db/db.json", JSON.stringify(removedNote));
-// });
+
+// Delete function
+const deletedNote = parseInt(req.params.id);
+readFile(noteArray, "utf8").then(data => {
+  let notes = JSON.parse(data);
+  notes = notes.filter(newNote => newNote.id !== deletedNote);
+  writeFile(noteArray, JSON.stringify(notes)).then(() => {
+    res.send('Got a DELETE request at /user');
+  })
+    .catch((err) => {
+      console.log(err);
+    });
+})
+  .catch((err) => {
+    console.log(err);
+  });
 
 // Listener
 // ================================================================================
