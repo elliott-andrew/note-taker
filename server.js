@@ -55,10 +55,7 @@ app.delete("/api/notes/:id", function (req, res) {
     // filter the notes and find the ID of the selected note, send the request
     notes = notes.filter(newNote => newNote.id !== deletedNote);
     writeFileSync(notesArray, JSON.stringify(notes))
-  })
-    .catch((err) => {
-      console.log(err);
-    });
+  });
 });
 
 // Routes
