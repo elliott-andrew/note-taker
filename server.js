@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const util = require("util");
 const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
+const writeFileSync = util.promisify(fs.writeFileSync);
 const notesArray = path.join(__dirname, 'db/db.json');
 
 // Express
@@ -29,38 +29,21 @@ app.get("/api/notes", function (req, res) {
   });
 });
 
-// Generate IDs for notes
-function noteID(currentNotes) {
-  let highestId = 0;
-  currentNotes.forEach(note => {
-    if (note.id > highestId) {
-      highestId = note.id;
-    }
-  });
-  return highestId + 1;
-};
 
 // Post function
 app.post("/api/notes", function (req, res) {
   // read the notes array file
-  readFile(notesArray, "utf8").then(data => {
-    // add the JSON parsed data to the variable notes
-    let notes = JSON.parse(data);
-    // Use the spread operator to add the submitted note to a new variable and assign it an ID we can later reference.
-    const newNote = { ...req.body, "id": noteID(notes) };
-    // add the new note to the notes variable.
-    notes.push(newNote);
-    // write the db file
-    writeFile(notesArray, JSON.stringify(notes)).then(() => {
-      res.json(newNote);
-    })
-      .catch((err) => {
-        console.log(err);
-      });
-  })
-    .catch((err) => {
-      console.log(err);
-    });
+  const notes = JSON.parse(fs.readFileSync('./db/db.json'));
+  // Use spread operator to grab the data
+  const newNote = { ...req.body };
+  // Add the new note to the notes array
+  notes.push(newNote);
+  // Assign the new note an index number
+  newNote.id = notes.indexOf(newNote);
+  // Update the db.json file
+  writeFileSync('./db/db.json', JSON.stringify(notes, null, 2)).then(() => {
+    res.JSON(notesArray)
+  });
 });
 
 // Delete function
@@ -71,12 +54,7 @@ app.delete("/api/notes/:id", function (req, res) {
     let notes = JSON.parse(data);
     // filter the notes and find the ID of the selected note, send the request
     notes = notes.filter(newNote => newNote.id !== deletedNote);
-    writeFile(notesArray, JSON.stringify(notes)).then(() => {
-      res.send('Got a DELETE request at /user');
-    })
-      .catch((err) => {
-        console.log(err);
-      });
+    writeFileSync(notesArray, JSON.stringify(notes))
   })
     .catch((err) => {
       console.log(err);
